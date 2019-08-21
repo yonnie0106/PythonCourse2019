@@ -111,54 +111,6 @@ def get_friends_info(user):
 		return "Friends_Info.csv" 
 
 
-### Define a function that finds users with the greatest number of followers or tweets ###
-def find_user(file):
-	with open(file, 'r') as f:  ## write .csv file named 'Friends_Info'
-		r = csv.DictReader(f)
-				
-		num_followers = []
-		name = []
-		num_tweets = []
-		types = []
-
-		## create lists of variables; values of each row have the same index in every list.  
-		for row in r: 
-			num_followers.append(int(row["No_Followers"]))
-			num_tweets.append(int(row["No_Tweets"]))
-			name.append(row["Screen_Name"])
-			types.append(row["Type"])
-		x = num_followers.index(max(num_followers)) # the index of the highest value(element) in the list of the number of followers
-		y = num_tweets.index(max(num_tweets)) # the index of the higest value in the list of the number of tweets 
-		
-		return f"The greatest number of followers is {x} of {name[x]} and the greatest number of tweets is {y} from {name[y]}."
-
-
-### Define a function that finds a user with the greatest number of tweets by group ###
-def find_user_by_type(file):
-	with open(file, 'r') as f:
-		r = csv.DictReader(f)
-
-		layman = []
-		expert = []
-		celeb = []
-		for row in r: ## divide into three lists of types 
-			if row["Type"] =="Layman":
-				layman.append(row)
-			elif row["Type"] == "Expert":
-				expert.append(row)
-			else: 
-				celeb.append(row)
-		layman_max = max(layman[i]["No_Tweets"] for i in range(len(layman))) ## find the maximum number of tweets in group Layman
-		layman_name = [layman[i]["Screen_Name"] for i in range(len(layman)) if layman[i]["No_Tweets"] == layman_max ] ## Laymen's names that have the maximum tweets 
-		expert_max = max(expert[i]["No_Tweets"] for i in range(len(expert))) ## find the maximum number of tweets in group Expert
-		expert_name = [expert[i]["Screen_Name"] for i in range(len(expert)) if expert[i]["No_Tweets"] == expert_max ] ## Experts' names that have the maximum tweets
-		celeb_max = max(celeb[i]["No_Tweets"] for i in range(len(celeb))) ## find the maximum nuber of tweets in group Celebrity
-		celeb_name = [celeb[i]["Screen_Name"] for i in range(len(celeb)) if celeb[i]["No_Tweets"] == celeb_max ] ## Celebs' names that have the maximum tweets  
-		
-		return f"""The greatest number of tweets among Layman is {layman_max} by {' ,'.join(layman_name)}.
-The greatest number of tweets among Expert is {expert_max} by {' ,'.join(expert_name)} 
-The greatest number of tweets among Celeb is {celeb_max} by {' ,'.join(celeb_name)}."""
-
 
 
 
@@ -294,6 +246,66 @@ def get_two_friends_info(user):
     	print(f"Get information of total {counter} friends")
 
     	return "Two_Friends_Info.csv" 
+
+
+
+
+
+
+
+
+### Define a function that finds users with the greatest number of followers or tweets ###
+def find_user(file):
+	with open(file, 'r') as f:  ## write .csv file named 'Friends_Info'
+		r = csv.DictReader(f)
+				
+		num_followers = []
+		name = []
+		num_tweets = []
+		types = []
+
+		## create lists of variables; values of each row have the same index in every list.  
+		for row in r: 
+			num_followers.append(int(row["No_Followers"]))
+			num_tweets.append(int(row["No_Tweets"]))
+			name.append(row["Screen_Name"])
+			types.append(row["Type"])
+		x = num_followers.index(max(num_followers)) # the index of the highest value(element) in the list of the number of followers
+		y = num_tweets.index(max(num_tweets)) # the index of the higest value in the list of the number of tweets 
+		
+		return f"The greatest number of followers is {x} of {name[x]} and the greatest number of tweets is {y} from {name[y]}."
+
+
+
+##### FIND A FOLLOWER/FRIEND ######
+
+### Define a function that finds a user with the greatest number of tweets by group ###
+def find_user_by_type(file):
+	with open(file, 'r') as f:
+		r = csv.DictReader(f)
+
+		layman = []
+		expert = []
+		celeb = []
+		for row in r: ## divide into three lists of types 
+			if row["Type"] =="Layman":
+				layman.append(row)
+			elif row["Type"] == "Expert":
+				expert.append(row)
+			else: 
+				celeb.append(row)
+		layman_max = max(layman[i]["No_Tweets"] for i in range(len(layman))) ## find the maximum number of tweets in group Layman
+		layman_name = [layman[i]["Screen_Name"] for i in range(len(layman)) if layman[i]["No_Tweets"] == layman_max ] ## Laymen's names that have the maximum tweets 
+		expert_max = max(expert[i]["No_Tweets"] for i in range(len(expert))) ## find the maximum number of tweets in group Expert
+		expert_name = [expert[i]["Screen_Name"] for i in range(len(expert)) if expert[i]["No_Tweets"] == expert_max ] ## Experts' names that have the maximum tweets
+		celeb_max = max(celeb[i]["No_Tweets"] for i in range(len(celeb))) ## find the maximum nuber of tweets in group Celebrity
+		celeb_name = [celeb[i]["Screen_Name"] for i in range(len(celeb)) if celeb[i]["No_Tweets"] == celeb_max ] ## Celebs' names that have the maximum tweets  
+		
+		return f"""The greatest number of tweets among Layman is {layman_max} by {' ,'.join(layman_name)}.
+The greatest number of tweets among Expert is {expert_max} by {' ,'.join(expert_name)} 
+The greatest number of tweets among Celeb is {celeb_max} by {' ,'.join(celeb_name)}."""
+
+
 
 
 #### One Degree of Separation ####
