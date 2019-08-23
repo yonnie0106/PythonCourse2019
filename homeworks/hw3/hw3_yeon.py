@@ -126,23 +126,31 @@ def get_two_followers_info(user):
     ### ids of Tier-one followers
     try: 
     	for one_id in tweepy.Cursor(api.followers_ids, user).items():
-       		one_id_list.append(one_id) 
-       		total_id_list.append(one_id)
+    		one_id_list.append(one_id) 
+    		total_id_list.append(one_id)
     except tweepy.TweepError as e:
-    	print(e)
-    	time.sleep(60*15)
-    	pass
+    	if e.reason == "Not authorized.":
+    		print(e)
+    	else:
+    		print(e)
+    		time.sleep(60*15)
+    		pass
     print("Fetched ids of Tier-one followers.")
    
     ### ids of Tier-two followers; append to total_id_list
     for one_id in one_id_list: # for each tier-one follower of the user
-        try : 
-        	for two_id in tweepy.Cursor(api.followers_ids, one_id).items(): # get id of each tier-two follower of the tier-one follower
-        		total_id_list.append(two_id)
-        except tweepy.TweepError as e:
-            print(e)
-            time.sleep(60*15)
-            pass
+    	try:
+    		for two_id in tweepy.Cursor(api.followers_ids, one_id).items(): # get id of each tier-two follower of the tier-one follower
+    			total_id_list.append(two_id)
+    		print(f"Get ids of followers of follower {one_id}")
+    	except tweepy.TweepError as e:
+    		if e.reason == "Not authorized.":
+    			print(e)
+    			continue
+    		else:
+    			print(e)
+    			time.sleep(60*15)
+    			pass
     print("A complete list of Tier-one and Tier-two followers.") 
 
     #### Fetch user object of all followers in the complete list; includes both tier-one and tier-two
@@ -152,9 +160,13 @@ def get_two_followers_info(user):
     		follower_obj.append(api.get_user(follower_id))
     		print(f"Fetched user object of follower {follower_id}")
     	except tweepy.TweepError as e:
-    		print(e)
-    		time.sleep(60*15)
-    		pass
+        	if e.reason == "Not authorized.":
+        		print(e)
+        		continue
+        	else:
+        		print(e)
+        		time.sleep(60*15)
+        		pass
 
     #### Save specific information of all followers in the complete list as .csv file
     with open('Two_Followers_Info.csv', 'w') as f:  ## write .csv file named 'Two_Followers_Info'
@@ -194,21 +206,30 @@ def get_two_friends_info(user):
     		one_id_list.append(one_id) 
     		total_id_list.append(one_id)
     except tweepy.TweepError as e:
-    	print(e)
-    	time.sleep(60*15)
-    	pass
+    	if e.reason == "Not authorized.":
+    		print(e)
+    	else:
+    		print(e)
+    		time.sleep(60*15)
+    		pass
     print("Fetched ids of Tier-one friends.")
    
     ### ids of Tier-two friends; append to total_id_list
-    
+    one_counter = 0
     for one_id in one_id_list: # for each tier-one friends of the user
         try: 
         	for two_id in tweepy.Cursor(api.followers_ids, one_id).items(): # get id of each tier-two friends of the tier-one friend 
         		total_id_list.append(two_id)
+        		print(f"Get ids of friends of friends {one_id}")
         except tweepy.TweepError as e:
-           	print(e)
-           	time.sleep(60*15)
-           	pass
+        	if e.reason == "Not authorized.":
+        		print(e)
+        	else:
+        		print(e)        		
+        		time.sleep(60*15)
+        		pass
+        one_counter += 1
+        print(f"Fetched ids of the friends of total {one_counter} friends of WUSTLPolisci")
     print("A complete list of Tier-one and Tier-two friends.") 
 
 
@@ -252,6 +273,7 @@ def get_two_friends_info(user):
 
 
 
+##### FIND A FOLLOWER/FRIEND ######
 
 
 ### Define a function that finds users with the greatest number of followers or tweets ###
@@ -277,7 +299,6 @@ def find_user(file):
 
 
 
-##### FIND A FOLLOWER/FRIEND ######
 
 ### Define a function that finds a user with the greatest number of tweets by group ###
 def find_user_by_type(file):
@@ -311,18 +332,19 @@ The greatest number of tweets among Celeb is {celeb_max} by {' ,'.join(celeb_nam
 #### One Degree of Separation ####
 
 
-get_followers_info('WUSTL') ### return 'Followers_Info.csv'
-get_friends_info('WUSTL') ### return 'Friends_Info.csv'
-#find_user('Followers_Info.csv') 
-#find_user('Friends_Info.csv')
-#find_user_by_type("Friends_Info.csv")
+#get_followers_info('WUSTL') ### return 'Followers_Info.csv'
+#get_friends_info('WUSTL') ### return 'Friends_Info.csv'
+print(find_user('Followers_Info.csv'))
+print(find_user('Friends_Info.csv'))
+print(find_user_by_type("Friends_Info.csv"))
+
 
 
 #### Two Degree of Separation ####
 
 
-get_two_followers_info('WUSTLPolisci') ### return 'Two_Followers_Info.csv'
-get_two_friends_info('WUSTLPolisci') ### return 'Two_Friends_Info.csv'
+#get_two_followers_info('WUSTLPolisci') ### return 'Two_Followers_Info.csv'
+#get_two_friends_info('WUSTLPolisci') ### return 'Two_Friends_Info.csv'
 #find_user('Two_Followers_Info.csv') 
 #find_user('Two_Friends_Info.csv')
 
