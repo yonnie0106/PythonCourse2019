@@ -137,7 +137,7 @@ session.commit()
 
 
 # Test again... (it keeps the count in the order they entered the database)
-print str(mason.id)
+print (str(mason.id))
 
 
 # Some querying
